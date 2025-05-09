@@ -11,7 +11,8 @@ from src.address import Address
 from src.characteristics import Characteristics
 from src.prices import Price
 from src.titles import Title
-
+from src.color import Color
+from src.doors_material import DoorsMaterial
 
 # нужную из кампаний переместите на последнюю позицию
 # т.е. в таком варианте генерация будет для stolishnici
@@ -64,6 +65,8 @@ def create_avito_feed(common_ad_list, common_data):
     '''
     root = ET.Element('Ads', formatVersion="3", target="avito.ru")
     etree = ET.ElementTree(root)
+    color = Color()
+    doors_material = DoorsMaterial()
 
     for index, ad in enumerate(common_ad_list):
         Id = ET.Element('Id')
@@ -79,6 +82,19 @@ def create_avito_feed(common_ad_list, common_data):
         ComponentsType = ET.Element('ComponentsType')
         Condition = ET.Element('Condition')
         Availability = ET.Element('Availability')
+
+        DoorsMaterial_ = ET.Element('DoorsMaterial')
+        Color_ = ET.Element('Color')
+        KitchenShape = ET.Element('KitchenShape')
+        Width = ET.Element('Width')
+        Height = ET.Element('Height')
+        DepthByWorktop = ET.Element('DepthByWorktop')
+        DepthByCorner = ET.Element('DepthByCorner')
+        WorktopIncluded = ET.Element('WorktopIncluded')
+        TabletopMaterial = ET.Element('TabletopMaterial')
+        FurnitureAdditions = ET.Element('FurnitureAdditions')
+        PriceType = ET.Element('PriceType')
+
         Title = ET.Element('Title')
         Price = ET.Element('Price')
         Description = ET.Element('Description')
@@ -103,10 +119,8 @@ def create_avito_feed(common_ad_list, common_data):
         Address.text = ad['Address']
         Category.text = common_data['Category']
         GoodsType.text = common_data['GoodsType']
-
-        if ad['product'] == 'stol' or ad['product'] == 'um':
-            GoodsSubType.text = common_data['GoodsSubType']
-            ComponentsType.text = 'Столешницы'
+        GoodsSubType.text = common_data['GoodsSubType']
+        ComponentsType.text = 'Столешницы'
 
 
         Condition.text = common_data['Condition']
@@ -114,16 +128,52 @@ def create_avito_feed(common_ad_list, common_data):
         Title.text = ad['name']
         Price.text = ad['Price']
 
-        Image1.set('url', ad['Image1'])
-        Image2.set('url', ad['Image2'])
-        Image3.set('url', ad['Image3'])
-        Image4.set('url', ad['Image4'])
-        Image5.set('url', ad['Image5'])
-        Image6.set('url', ad['Image6'])
-        Image7.set('url', ad['Image7'])
-        Image8.set('url', ad['Image8'])
-        Image9.set('url', ad['Image9'])
-        Image10.set('url', ad['Image10'])
+        Color_.text = color.get_random()
+        DoorsMaterial_.text = doors_material.get_random()
+        KitchenShape.text = random.choice(['Прямая', 'Угловая', 'Другая'])
+        Width.text = '200'
+        Height.text = '220'
+        DepthByWorktop.text = '60'
+        DepthByCorner.text = '150'
+        WorktopIncluded.text = 'Есть'
+        TabletopMaterial.text = random.choice([
+            'ДСП', 'ЛДСП', 'МДФ', 'Дерево', 'Пластик'
+            ])
+
+        FurnitureOption1 = ET.Element('Option')
+        FurnitureOption2 = ET.Element('Option')
+        FurnitureOption3 = ET.Element('Option')
+        FurnitureOption4 = ET.Element('Option')
+        FurnitureOption5 = ET.Element('Option')
+        FurnitureOption6 = ET.Element('Option')
+
+        FurnitureOption1.set('Option', 'Шкаф под мойку')
+        FurnitureOption2.set('Option', 'Шкаф под духовку')
+        FurnitureOption3.set('Option', 'Шкаф с ящиками')
+        FurnitureOption4.set('Option', 'Пенал')
+        FurnitureOption5.set('Option', 'Навесные шкафы')
+        FurnitureOption6.set('Option', 'Навесной шкаф под вытяжку')
+
+        FurnitureAdditions = ET.Element('FurnitureAdditions')
+        FurnitureAdditions.append(FurnitureOption1)
+        FurnitureAdditions.append(FurnitureOption2)
+        FurnitureAdditions.append(FurnitureOption3)
+        FurnitureAdditions.append(FurnitureOption4)
+        FurnitureAdditions.append(FurnitureOption5)
+        FurnitureAdditions.append(FurnitureOption6)
+
+        PriceType.text = 'за погонный метр'
+
+        Image1.set('url', ad['Image1'].strip())
+        Image2.set('url', ad['Image2'].strip())
+        Image3.set('url', ad['Image3'].strip())
+        Image4.set('url', ad['Image4'].strip())
+        Image5.set('url', ad['Image5'].strip())
+        Image6.set('url', ad['Image6'].strip())
+        Image7.set('url', ad['Image7'].strip())
+        Image8.set('url', ad['Image8'].strip())
+        Image9.set('url', ad['Image9'].strip())
+        Image10.set('url', ad['Image10'].strip())
 
         Images = ET.Element('Images')
         Images.append(Image1)
@@ -151,17 +201,27 @@ def create_avito_feed(common_ad_list, common_data):
         offer.append(Address)
         offer.append(Category)
         offer.append(GoodsType)
-        if ad['product'] == 'stol' or ad['product'] == 'um':
-            offer.append(GoodsSubType)
-            offer.append(ComponentsType)
+        offer.append(GoodsSubType)
         offer.append(Condition)
         offer.append(Availability)
         offer.append(Title)
         offer.append(Price)
         offer.append(Description)
         offer.append(Images)
-        root.append(offer)
+        offer.append(Color_)
 
+        offer.append(DoorsMaterial_)
+        offer.append(KitchenShape)
+        offer.append(Width)
+        offer.append(Height)
+        offer.append(DepthByWorktop)
+        offer.append(DepthByCorner)
+        offer.append(WorktopIncluded)
+        offer.append(TabletopMaterial)
+        offer.append(FurnitureAdditions)
+        offer.append(PriceType)
+
+        root.append(offer)
 
     myfile = open(RESULT_FEED_NAME, "wb")
     etree.write(myfile, encoding='utf-8', xml_declaration=True, pretty_print=True)
@@ -294,7 +354,7 @@ if __name__ == "__main__":
     for ad in common_Moskow_ad_list:
         product = ad['product']
         ad['Price'] = str(price.get_price(product))
-        ad['Articul'] = characteristics.get_full_row() + '\nАртикул:' + ARTICUL_PART + str(index + AD_START_ID)
+        ad['Articul'] = '\nАртикул:' + ARTICUL_PART + str(index + AD_START_ID)
         ad['Id'] = str(index + AD_START_ID)
         ad['Image1'] = BASE_IMG_URL + img.get_url(product, 1)
         ad['Image2'] = BASE_IMG_URL + img.get_url(product, 2)
@@ -316,7 +376,7 @@ if __name__ == "__main__":
     for ad in common_MO_ad_list:
         product = ad['product']
         ad['Price'] = str(price.get_price(product))
-        ad['Articul'] = characteristics.get_full_row() + '\nАртикул:' + ARTICUL_PART + str(index + AD_START_ID)
+        ad['Articul'] = '\nАртикул:' + ARTICUL_PART + str(index + AD_START_ID)
         ad['Id'] = str(index + AD_START_ID)
         ad['Image1'] = BASE_IMG_URL + img.get_url(product, 1)
         ad['Image2'] = BASE_IMG_URL + img.get_url(product, 2)
