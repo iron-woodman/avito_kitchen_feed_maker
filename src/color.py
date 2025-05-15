@@ -15,5 +15,5 @@ class Color:
         return random.choice(self.colors_list)
 
     def load(self, file):
-        with open(file, 'r', encoding='utf-8') as f:
-            return f.read().split('\n')
+       with open(file, 'r', encoding='utf-8-sig') as f:
+           return f.read().split('\n')
