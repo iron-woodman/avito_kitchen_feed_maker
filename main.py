@@ -13,6 +13,7 @@ from src.prices import Price
 from src.titles import Title
 from src.color import Color
 from src.doors_material import DoorsMaterial
+from src.date_begin import DateBegin
 
 # нужную из кампаний переместите на последнюю позицию
 # т.е. в таком варианте генерация будет для stolishnici
@@ -24,6 +25,7 @@ company = 'kitchen'
 #------------- кол-во объявлений -----------------------------------
 AD_COUNT_M = 100  #кол-во объявлений  по москве
 AD_COUNT_MO = 40  #кол-во объявлений по мос. обл.
+START_DATE = "21.05.2025"
 # -------------------------------------------------------------------
 
 ARTICUL_PART = 'may-' # префикс артикула
@@ -67,6 +69,7 @@ def create_avito_feed(common_ad_list, common_data):
     etree = ET.ElementTree(root)
     color = Color()
     doors_material = DoorsMaterial()
+    date_generator =  DateBegin(START_DATE, AD_COUNT_M+AD_COUNT_MO)
 
     for index, ad in enumerate(common_ad_list):
         Id = ET.Element('Id')
@@ -94,6 +97,7 @@ def create_avito_feed(common_ad_list, common_data):
         TabletopMaterial = ET.Element('TabletopMaterial')
         FurnitureAdditions = ET.Element('FurnitureAdditions')
         PriceType = ET.Element('PriceType')
+        DateBegin_ = ET.Element('DateBegin')
 
         Title = ET.Element('Title')
         Price = ET.Element('Price')
@@ -128,6 +132,7 @@ def create_avito_feed(common_ad_list, common_data):
         Title.text = ad['name']
         Price.text = ad['Price']
 
+        DateBegin_.text = date_generator.get_random()
         Color_.text = color.get_random()
         DoorsMaterial_.text = doors_material.get_random()
         KitchenShape.text = random.choice(['Прямая', 'Угловая', 'Другая'])
@@ -209,6 +214,7 @@ def create_avito_feed(common_ad_list, common_data):
         offer.append(Description)
         offer.append(Images)
         offer.append(Color_)
+        offer.append(DateBegin_)
 
         offer.append(DoorsMaterial_)
         offer.append(KitchenShape)

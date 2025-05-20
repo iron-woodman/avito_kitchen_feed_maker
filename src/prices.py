@@ -6,7 +6,7 @@ class Price:
     podokonnik_prices = []
 
     def __init__(self):
-        self.kitchen_prices = [price for price in range(20000, 80000, 5000)]
+        self.kitchen_prices = [price for price in range(10000, 20000, 1000)]
 
     def get_price(self, product: str):
         """
